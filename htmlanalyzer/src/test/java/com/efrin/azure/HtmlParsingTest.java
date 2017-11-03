@@ -26,7 +26,6 @@ public class HtmlParsingTest {
 		 final Function function = new Function();
 		
 		 String resp  = parser.extractHTMLLinks(function.htmlParser("https://www.retsinformation.dk/Forms/R0710.aspx?id=192080", null), "test.txt");
-		 //String resp  = parser.extractHTMLLinks("Blah blah blah <a href='http://www.javacodegeeks.com/'>JavaCodeGeeks</a> blah blah blah blah", "file2.txt");
 		 //The response contains data
 		 assertThat(resp, is(notNullValue()));
 		 //The data was writen in the file  in c:\temp\file2.txt

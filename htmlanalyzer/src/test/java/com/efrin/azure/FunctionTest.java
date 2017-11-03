@@ -23,7 +23,7 @@ public class FunctionTest {
     public void testStart() throws Exception {
 		 List<String> urlList = new ArrayList<String>();
 		 urlList.add("https://www.retsinformation.dk/Forms/R0710.aspx?id=192080");
-		 urlList.add("https://www.retsinformation.dk/Forms/R0710.aspx?id=192080");
+		 urlList.add("https://www.retsinformation.dk/Forms/R0710.aspx?id=192286 ");
 		 urlList.add("https://www.google.com");
 		 	
 		 
