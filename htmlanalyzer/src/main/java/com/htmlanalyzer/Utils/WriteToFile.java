@@ -12,7 +12,8 @@ public class WriteToFile {
 
 	
 	public void writeToLocalFile(String text, String link, String fileName){
-		final String FILENAME = "C:\\Users\\EFRINGONZALEZ\\Documents\\GitHub\\HtmlAnalyzer\\htmlanalyzer\\src\\files\\"+fileName;
+	
+		final String FILENAME = "C:\\temp\\"+fileName;
 		
 			BufferedWriter bw = null;
 			FileWriter fw = null;

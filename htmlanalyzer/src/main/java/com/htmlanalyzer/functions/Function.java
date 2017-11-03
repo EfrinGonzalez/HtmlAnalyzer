@@ -33,14 +33,19 @@ public class Function {
     private List<String> urlList = new ArrayList<String>();
     
 	@FunctionName("start")
-    public String start(@HttpTrigger(name = "req", methods = {"get", "post"}, authLevel = AuthorizationLevel.ANONYMOUS) String req, ExecutionContext context) {
+   // public String start(@HttpTrigger(name = "req", methods = {"get", "post"}, authLevel = AuthorizationLevel.ANONYMOUS) String req, ExecutionContext context) {
+	public int start(@HttpTrigger(name = "req", methods = {"get", "post"}, authLevel = AuthorizationLevel.ANONYMOUS) List<String> req, ExecutionContext context) {
 		//This list should come from a curl command.
-		urlList.add("https://www.retsinformation.dk/Forms/R0710.aspx?id=192080");
-		urlList.add("https://www.retsinformation.dk/Forms/R0710.aspx?id=192080");
+		//urlList.add("https://www.retsinformation.dk/Forms/R0710.aspx?id=192080");
+		//urlList.add("https://www.retsinformation.dk/Forms/R0710.aspx?id=192080");
+		
+		urlList = req;
+		
 		
 		this.htmlParser(urlList.get(0), context);
 		this.htmlParser(urlList.get(0), context);
-        return String.format("Hello, %s!", req);
+        //return String.format("Hello, %s!", req);
+		return urlList.size();
     }
     
 	
@@ -52,8 +57,7 @@ public class Function {
 	
 		String inputLine;
 		StringBuffer response = new StringBuffer();
-		StringBuffer responseTwo = new StringBuffer();
-		BufferedReader in, inTwo = null;
+		BufferedReader in = null;
 		try {
 			obj = new URL(req);			
 			con = (HttpURLConnection) obj.openConnection();			
@@ -76,9 +80,9 @@ public class Function {
 		}
 				
 		HtmlParsing hmlParser = new HtmlParsing();
-		hmlParser.extractHTMLLinks(response.toString(), "file1.txt");
+		hmlParser.extractHTMLLinks(response.toString(), "file.txt");
+		return response.toString();
 		
-		return "Done for: url 1:" + url ;
 }
 	
 
