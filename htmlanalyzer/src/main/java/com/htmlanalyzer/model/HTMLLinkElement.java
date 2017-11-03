@@ -1,8 +1,12 @@
 package com.htmlanalyzer.model;
 
-public class HTMLLinkElement {
-		String linkElement;	
-	    String linkAddress;
+import java.io.Serializable;
+
+public class HTMLLinkElement {//implements Serializable{
+	
+		//private static final long serialVersionUID =1L;
+		private String linkElement;	
+	    private String linkAddress;
 	    
 	    public String getLinkAddress() {	
 	        return linkAddress;
@@ -29,11 +33,17 @@ public class HTMLLinkElement {
 	        return linkElement;	
 	    }
 
-	    @Override	
-	    public String toString() {	
-	        return "Link Address : " + this.linkAddress 
-	        		+ ". Link Element : "	
-	                + this.linkElement;
-	    }
+	    
+	    @Override
+		public String toString() {
+			return "Text=" + getLinkElement() + ", linkAddress=" + getLinkAddress() ;
+		}
 
+	    /* @Override	
+	    public String toString() {	
+	               
+	        return new StringBuffer("Link Text : ").append(getLinkElement())
+	        				.append("Link Address : ").append(getLinkAddress()).toString();
+	    }
+*/
 }

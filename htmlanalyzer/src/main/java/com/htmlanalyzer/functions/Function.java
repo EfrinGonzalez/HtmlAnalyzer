@@ -12,12 +12,14 @@ import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
 import com.htmlanalyzer.Utils.HtmlParsing;
+import com.htmlanalyzer.Utils.WriteToFile;
+import com.htmlanalyzer.model.HTMLLinkElement;
 import com.microsoft.azure.serverless.functions.ExecutionContext;
 import com.microsoft.azure.serverless.functions.annotation.AuthorizationLevel;
 import com.microsoft.azure.serverless.functions.annotation.FunctionName;
 import com.microsoft.azure.serverless.functions.annotation.HttpTrigger;
 import java.util.ArrayList;
-
+import java.util.List;
 import java.util.regex.Matcher;
 
 import java.util.regex.Pattern;
@@ -27,155 +29,95 @@ import java.util.regex.Pattern;
  */
 public class Function {
     private static final String USER_AGENT = "Mozilla/5.0";
-    private String url;
+    private String url,  urlTwo;
+    private List<String> urlList = new ArrayList<String>();
     
-	@FunctionName("hello")
-    public String hello(@HttpTrigger(name = "req", methods = {"get", "post"}, authLevel = AuthorizationLevel.ANONYMOUS) String req,
+	@FunctionName("start")
+    public String start(@HttpTrigger(name = "req", methods = {"get", "post"}, authLevel = AuthorizationLevel.ANONYMOUS) String req,
                         ExecutionContext context) {
+		
+		this.htmlParser(req, context);
         return String.format("Hello, %s!", req);
     }
     
 	
-	@FunctionName("html")
-	public String html(@HttpTrigger(name = "req", methods = {"get", "post"}, authLevel = AuthorizationLevel.ANONYMOUS) String req,
+	@FunctionName("htmlParser")
+	public String htmlParser(@HttpTrigger(name = "req", methods = {"get", "post"}, authLevel = AuthorizationLevel.ANONYMOUS) String req,
             ExecutionContext context) {
-		//String url = "https://www.retsinformation.dk/Forms/R0710.aspx?id=192080";
-		url = req;
+		//https://www.retsinformation.dk/Forms/R0710.aspx?id=192080
+		//https://www.retsinformation.dk/Forms/R0710.aspx?id=192286 
+		//url = req;
+		url = "https://www.retsinformation.dk/Forms/R0710.aspx?id=192080"; 
+		urlTwo = "https://www.retsinformation.dk/Forms/R0710.aspx?id=192080";
+		
+		
+	
 		URL obj = null;	
-		HttpURLConnection con = null;			
+		URL objTwo = null;	
+		
+		HttpURLConnection con = null;
+
+		HttpURLConnection conTwo = null;
+		
 		System.out.println("\nSending 'GET' request to URL : " + url);
+		System.out.println("\nSending 'GET' request to URL : " + urlTwo);
 	
 		String inputLine;
 		StringBuffer response = new StringBuffer();
-		BufferedReader in = null;
+		StringBuffer responseTwo = new StringBuffer();
+		BufferedReader in, inTwo = null;
 		try {
+			
 			obj = new URL(url);
+			objTwo = new URL(urlTwo);
+			
 			con = (HttpURLConnection) obj.openConnection();
+			conTwo = (HttpURLConnection) objTwo.openConnection();
+			
 			con.setRequestMethod("GET");
+			conTwo.setRequestMethod("GET");
+			
 			con.setRequestProperty("User-Agent", USER_AGENT);
+			conTwo.setRequestProperty("User-Agent", USER_AGENT);
 			//responseCode = con.getResponseCode();
 			in = new BufferedReader(
 			        new InputStreamReader(con.getInputStream()));
+			
+			inTwo = new BufferedReader(
+			        new InputStreamReader(conTwo.getInputStream()));
 			
 			while ((inputLine = in.readLine()) != null) {
 				response.append(inputLine);
 			}
 			
-			in.close();			
+			in.close();	
 			
+			while ((inputLine = inTwo.readLine()) != null) {
+				responseTwo.append(inputLine);
+			}
+			
+			inTwo.close();
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 				
-		HtmlParsing hmlParser = new HtmlParsing();
-		hmlParser.extractHTMLLinks(response.toString());
+		//url = "https://www.retsinformation.dk/Forms/R0710.aspx?id=192080"; 
+		//urlTwo = "https://www.retsinformation.dk/Forms/R0710.aspx?id=192080";
 		
-		return String.format("Done, %s!", req);
+		HtmlParsing hmlParser = new HtmlParsing();
+		hmlParser.extractHTMLLinks(response.toString(), "file1.txt");
+		
+		
+		//List<HTMLLinkElement> elementsOne = new ArrayList<HTMLLinkElement>(); 
+		
+		HtmlParsing hmlParserTwo = new HtmlParsing();
+		hmlParser.extractHTMLLinks(response.toString(), "file2.txt");
+		
+		
+		return "Done for: url 1:" + url 
+					  + " url2: " + urlTwo;
 }
 	
-	
-	
-    @FunctionName("github")
-    public String github(@HttpTrigger(name = "name", methods = {"get", "post"}, authLevel = AuthorizationLevel.ANONYMOUS) String req,
-                        ExecutionContext context) {
-    	
-    	
-    	final String FILENAME = "C:\\Users\\EFRINGONZALEZ\\Documents\\AzureJava\\test\\com.efrin\\src\\files\\file.txt";
-    	    	
-    	String url = "https://www.retsinformation.dk/Forms/R0710.aspx?id=192080"; 
-		URL obj = null;	
-		HttpURLConnection con = null;			
-		System.out.println("\nSending 'GET' request to URL : " + url);
-	
-		String inputLine;
-		StringBuffer response = new StringBuffer();
-		BufferedReader in = null;
-		try {
-			obj = new URL(url);
-			con = (HttpURLConnection) obj.openConnection();
-			con.setRequestMethod("GET");
-			con.setRequestProperty("User-Agent", USER_AGENT);
-			//responseCode = con.getResponseCode();
-			in = new BufferedReader(
-			        new InputStreamReader(con.getInputStream()));
-			
-			while ((inputLine = in.readLine()) != null) {
-				response.append(inputLine);
-			}
-			
-			in.close();			
-			
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		
-		System.out.println(response.toString());
 
-    	
-		//writing the file
-		/*
-			BufferedWriter bw = null;
-			FileWriter fw = null;
-
-			try {
-
-				String content = response.toString();// "This is the content to write into file\n";
-				//String content = "test";
-				
-				fw = new FileWriter(FILENAME);
-				bw = new BufferedWriter(fw);
-				bw.write(content);
-
-				System.out.println("Done");
-
-			} catch (IOException e) {
-
-				e.printStackTrace();
-
-			} finally {
-
-				try {
-
-					if (bw != null)
-						bw.close();
-
-					if (fw != null)
-						fw.close();
-
-				} catch (IOException ex) {
-
-					ex.printStackTrace();
-
-				}
-
-			}
-		 	*/
-		
-		
-		
-	//String htmlString = response.toString();
-	
-	/*try {
-		Document doc = Jsoup.connect(url).get();
-		Elements links = doc.select("a[href]");
-
-		for(Element link : links){
-			
-			System.out.println("link: "+ link.attr("href"));
-			System.out.println("Text: "+ link.attr("Text"));
-			}
-	} catch (IOException e) {
-		// TODO Auto-generated catch block
-		e.printStackTrace();
-	}
-	*/
-	
-		///
-		
-		
-    	return ("done");
-    	//return String.format("Github, %s!", req);
-    }
 }

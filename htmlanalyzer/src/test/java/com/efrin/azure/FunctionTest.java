@@ -11,14 +11,21 @@ import static org.junit.Assert.assertEquals;
  */
 public class FunctionTest {
     /**
-     * Unit test for hello method.
+     * Unit test for start method.
      */
     @Test
-    public void testHello() throws Exception {
+    public void testStart() throws Exception {
         final Function function = new Function();
 
-        final String ret = function.hello("function", null);
+        final String ret = function.start("function", null);
 
         assertEquals("Hello, function!", ret);
+    
     }
+    
+    
+  
+    
+    
+    
 }
