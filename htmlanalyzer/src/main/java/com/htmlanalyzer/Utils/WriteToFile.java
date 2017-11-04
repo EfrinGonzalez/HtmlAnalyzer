@@ -10,42 +10,42 @@ import com.htmlanalyzer.model.HTMLLinkElement;
 
 public class WriteToFile {
 
-	
-	public void writeToLocalFile(String text, String link, String fileName){
-	
-		final String FILENAME = "C:\\temp\\"+fileName;
-		
-			BufferedWriter bw = null;
-			FileWriter fw = null;
+	public void writeToLocalFile(String text, String link, String fileName) {
 
-			try {				
-				fw = new FileWriter(FILENAME, true);
-				bw = new BufferedWriter(fw);
-				bw.write(text +" : " +link);
-				bw.newLine();				
+		final String FILENAME = "C:\\temp\\" + fileName;
 
-			} catch (IOException e) {
+		BufferedWriter bw = null;
+		FileWriter fw = null;
 
-				e.printStackTrace();
+		try {
+			fw = new FileWriter(FILENAME, true);
+			bw = new BufferedWriter(fw);
+			// “link text;url”
+			bw.write('"' + text + " ; " + link + '"');
+			bw.newLine();
 
-			} finally {
+		} catch (IOException e) {
 
-				try {
+			e.printStackTrace();
 
-					if (bw != null)
-						bw.close();
+		} finally {
 
-					if (fw != null)
-						fw.close();
+			try {
 
-				} catch (IOException ex) {
+				if (bw != null)
+					bw.close();
 
-					ex.printStackTrace();
+				if (fw != null)
+					fw.close();
 
-				}
+			} catch (IOException ex) {
+
+				ex.printStackTrace();
 
 			}
-		 	
+
+		}
+
 	}
-	
+
 }

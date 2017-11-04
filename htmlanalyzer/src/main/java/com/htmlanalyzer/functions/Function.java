@@ -28,62 +28,53 @@ import java.util.regex.Pattern;
  * Hello function with HTTP Trigger.
  */
 public class Function {
-    private static final String USER_AGENT = "Mozilla/5.0";
-    private String url,  urlTwo;
-    private List<String> urlList = new ArrayList<String>();
-    
+	private static final String USER_AGENT = "Mozilla/5.0";
+	private String url, urlTwo;
+	private List<String> urlList = new ArrayList<String>();
+
 	@FunctionName("start")
-   // public String start(@HttpTrigger(name = "req", methods = {"get", "post"}, authLevel = AuthorizationLevel.ANONYMOUS) String req, ExecutionContext context) {
-	public int start(@HttpTrigger(name = "req", methods = {"get", "post"}, authLevel = AuthorizationLevel.ANONYMOUS) List<String> req, ExecutionContext context) {
-		//This list should come from a curl command.
-		//urlList.add("https://www.retsinformation.dk/Forms/R0710.aspx?id=192080");
-		//urlList.add("https://www.retsinformation.dk/Forms/R0710.aspx?id=192080");
-		
+	public int start(@HttpTrigger(name = "req", methods = { "get",
+			"post" }, authLevel = AuthorizationLevel.ANONYMOUS) List<String> req, ExecutionContext context) {
 		urlList = req;
-		
-		
+
 		this.htmlParser(urlList.get(0), context);
 		this.htmlParser(urlList.get(0), context);
-        //return String.format("Hello, %s!", req);
 		return urlList.size();
-    }
-    
-	
+	}
+
 	@FunctionName("htmlParser")
-	public String htmlParser(@HttpTrigger(name = "req", methods = {"get", "post"}, authLevel = AuthorizationLevel.ANONYMOUS) String req,            ExecutionContext context) {
-		URL obj = null;	
+	public String htmlParser(@HttpTrigger(name = "req", methods = { "get",
+			"post" }, authLevel = AuthorizationLevel.ANONYMOUS) String req, ExecutionContext context) {
+		URL obj = null;
 		HttpURLConnection con = null;
 		System.out.println("\nSending 'GET' request to URL : " + urlTwo);
-	
+
 		String inputLine;
 		StringBuffer response = new StringBuffer();
 		BufferedReader in = null;
 		try {
-			obj = new URL(req);			
-			con = (HttpURLConnection) obj.openConnection();			
+			obj = new URL(req);
+			con = (HttpURLConnection) obj.openConnection();
 			con.setRequestMethod("GET");
 			con.setRequestProperty("User-Agent", USER_AGENT);
-		
-			in = new BufferedReader(
-			        new InputStreamReader(con.getInputStream()));
-		
+
+			in = new BufferedReader(new InputStreamReader(con.getInputStream()));
+
 			while ((inputLine = in.readLine()) != null) {
 				response.append(inputLine);
 			}
-			
-			in.close();	
-			
-		
+
+			in.close();
+
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-				
+
 		HtmlParsing hmlParser = new HtmlParsing();
-		hmlParser.extractHTMLLinks(response.toString(), "file.txt");
+		hmlParser.extractHTMLLinksJSoup(response.toString(), "file.txt");
 		return response.toString();
-		
-}
-	
+
+	}
 
 }
