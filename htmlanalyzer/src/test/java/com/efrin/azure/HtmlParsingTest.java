@@ -25,6 +25,7 @@ public class HtmlParsingTest {
 	String resp ="";
 	String fileName = "c:\\temp\\test.txt";
 	
+	@Ignore
 	@Test
 	public void testHtmlExtractionJSoup() throws Exception {
 		parser = new HtmlParsing();

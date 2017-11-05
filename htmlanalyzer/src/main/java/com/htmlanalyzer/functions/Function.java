@@ -1,28 +1,25 @@
 package com.htmlanalyzer.functions;
 
 import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
-
-import org.jsoup.Jsoup;
-import org.jsoup.nodes.Document;
-import org.jsoup.nodes.Element;
-import org.jsoup.select.Elements;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.concurrent.ConcurrentLinkedQueue;
 
 import com.htmlanalyzer.Utils.HtmlParsing;
+import com.htmlanalyzer.Utils.MyThread;
 import com.htmlanalyzer.Utils.WriteToFile;
-import com.htmlanalyzer.model.HTMLLinkElement;
 import com.microsoft.azure.serverless.functions.ExecutionContext;
 import com.microsoft.azure.serverless.functions.annotation.AuthorizationLevel;
 import com.microsoft.azure.serverless.functions.annotation.FunctionName;
 import com.microsoft.azure.serverless.functions.annotation.HttpTrigger;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.regex.Matcher;
 
-import java.util.regex.Pattern;
 
 /**
  * Hello function with HTTP Trigger.
@@ -38,7 +35,37 @@ public class Function {
 		urlList = req;
 
 		this.htmlParser(urlList.get(0), context);
-		this.htmlParser(urlList.get(0), context);
+		this.htmlParser(urlList.get(1), context);
+		
+		File file=new File("c:\\temp\\"+"test.txt");
+		
+		//
+		try {
+			FileOutputStream out=new FileOutputStream(file, true);
+			ConcurrentLinkedQueue<String> queue=new ConcurrentLinkedQueue<String>();
+			for(int i=1;i<21;i++){
+				//new Thread(new MyThread(queue,"Thread " +i+" ".start)), (); 
+				new Thread(new MyThread(queue,"Thread " +i+" ")).start();// multi thread into the queue data
+			}
+			new Thread(new WriteToFile(out,queue)).start();//The thread of monitoring, continuously from the queue read and write data to a file
+			
+			try {
+				Thread.sleep(1000);
+				if(!Thread.currentThread().isAlive()){
+					System.out.println("The thread has finished");
+				}
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		}
+		
+		
+		
+		//
 		return urlList.size();
 	}
 
@@ -47,7 +74,7 @@ public class Function {
 			"post" }, authLevel = AuthorizationLevel.ANONYMOUS) String req, ExecutionContext context) {
 		URL obj = null;
 		HttpURLConnection con = null;
-		System.out.println("\nSending 'GET' request to URL : " + urlTwo);
+		//System.out.println("\nSending 'GET' request to URL : " + urlTwo);
 
 		String inputLine;
 		StringBuffer response = new StringBuffer();

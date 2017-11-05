@@ -5,17 +5,34 @@ import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.ObjectOutputStream;
+import java.util.concurrent.ConcurrentLinkedQueue;
 
 import com.htmlanalyzer.model.HTMLLinkElement;
 
-public class WriteToFile {
+public class WriteToFile implements Runnable{
+	
+	
+	private ConcurrentLinkedQueue<String> queue;
+	//final String FILENAME = "C:\\temp\\test.txt";
+	private BufferedWriter bw = null;
+	private FileWriter fw = null;
+	private FileOutputStream out;
 
-	public void writeToLocalFile(String text, String link, String fileName) {
+	public WriteToFile(){
+		
+	}
+	
+	public WriteToFile(FileOutputStream out, ConcurrentLinkedQueue<String> queue){
+		this.out = out;
+		this.queue = queue;
+	}
+
+
+	/*public void writeToLocalFile(String text, String link, String fileName) {
 
 		final String FILENAME = "C:\\temp\\" + fileName;
 
-		BufferedWriter bw = null;
-		FileWriter fw = null;
+		
 
 		try {
 			fw = new FileWriter(FILENAME, true);
@@ -46,6 +63,28 @@ public class WriteToFile {
 
 		}
 
-	}
+	}*/
+
+	@Override
+	public void run() {
+		synchronized (queue) {
+			while (true) {
+				if (!queue.isEmpty()) {
+					try {
+						out.write(queue.poll().getBytes("UTF-8"));
+						//bw.write('"' + text + " ; " + link + '"');
+						//out.newLine();
+					} catch (IOException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+				}
+				try {
+					Thread.sleep(100);
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				}
+			}
+		}}
 
 }

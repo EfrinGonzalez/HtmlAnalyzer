@@ -23,7 +23,7 @@ public class HtmlParsing {
 		for (Element link : links) {
 			System.out.println(link.attr("href") + " : " + link.text());
 			WriteToFile writer = new WriteToFile();
-			writer.writeToLocalFile(link.text(), link.attr("href"), fileName);
+			//writer.writeToLocalFile(link.text(), link.attr("href"), fileName);
 		}
 
 		return links.toString();
