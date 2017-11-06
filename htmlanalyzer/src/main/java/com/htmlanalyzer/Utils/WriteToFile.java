@@ -12,7 +12,6 @@ import com.htmlanalyzer.model.HTMLLinkElement;
 public class WriteToFile implements Runnable {
 
 	private ConcurrentLinkedQueue<String> queue;
-	// final String FILENAME = "C:\\temp\\test.txt";
 	private BufferedWriter bw = null;
 	private FileWriter fw = null;
 	private FileOutputStream out;

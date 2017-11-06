@@ -3,7 +3,7 @@ package com.htmlanalyzer.Utils;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
 public class MyThread implements Runnable {
-	
+
 	private ConcurrentLinkedQueue<String> queue;
 	private String contents;
 

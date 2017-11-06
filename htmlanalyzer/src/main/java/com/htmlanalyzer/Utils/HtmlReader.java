@@ -17,21 +17,22 @@ import org.jsoup.select.Elements;
 import com.htmlanalyzer.model.HTMLLinkElement;
 
 public class HtmlReader {
-	private static final String USER_AGENT = "Mozilla/5.0";
-	
-	public String GetHtmlDocumentAsString(String url){
 
-		URL obj = null;
-		HttpURLConnection con = null;
-		String inputLine;
-		StringBuffer response = new StringBuffer();
-		BufferedReader in = null;
+	private static final String USER_AGENT = "Mozilla/5.0";
+	private URL obj = null;
+	private HttpURLConnection con = null;
+	private String inputLine = null;
+	private StringBuffer response = null; 
+	private BufferedReader in = null;
+
+	public String GetHtmlDocumentAsString(String url) {
+
 		try {
+			response = new StringBuffer();
 			obj = new URL(url);
 			con = (HttpURLConnection) obj.openConnection();
 			con.setRequestMethod("GET");
 			con.setRequestProperty("User-Agent", USER_AGENT);
-
 			in = new BufferedReader(new InputStreamReader(con.getInputStream()));
 
 			while ((inputLine = in.readLine()) != null) {
@@ -45,10 +46,7 @@ public class HtmlReader {
 			e.printStackTrace();
 		}
 
-		//HtmlParsing hmlParser = new HtmlParsing();
-		//hmlParser.extractHTMLLinksJSoup(response.toString());
 		return response.toString();
 
-	
 	}
 }
