@@ -11,54 +11,61 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
-import org.junit.Ignore;
 import org.junit.Test;
 
 import com.htmlanalyzer.Utils.MyThread;
 import com.htmlanalyzer.Utils.WriteToFile;
-import com.htmlanalyzer.functions.Function;
+
 
 public class FileWriterTest {
 	private ConcurrentLinkedQueue<String> queue = null;
 	private FileOutputStream out = null;
 	private File file = null;
 	private String fileName = "c:\\Temp\\test.txt";
-	
-	
-	
-	 
-		@Test
-		public void testFileExistAndNotEmpty() throws Exception {		
-			
-			queue = new ConcurrentLinkedQueue<String>();
-		
-			
-			// The data was writen into the queue
-			//new Thread(new MyThread(queue, '"' + "text" + " : " + "link" + '"' + "\n")).start();
-		 
-			//Write into the file
-			//new Thread(new WriteToFile(out, queue)).start();	
-		
-			//The file has to exist in order to do this test
-			file = new File(fileName);
-		 	//System.out.println("File: "+fileName);
-			assertTrue(file.exists());
 
-			String fileContent = readFile(fileName);
-			assertThat(fileContent, is(notNullValue()));
-			
+	@Test
+	public void testWriteToFile() throws Exception {
+
+		file = new File("c:\\temp\\" + File.separator + "test.txt");
+		out = new FileOutputStream(file, true);
+		queue = new ConcurrentLinkedQueue<String>();
+
+		for (int i = 1; i < 100; i++) {
+			// new Thread(new MyThread(queue,"Thread " +i+" ")).start();// multi
+			// thread into the queue data
+			new Thread(new MyThread(queue, '"' + "text" + " : " + "link" + '"' + "\n")).start();
 		}
-	 
-	 
-	 
-	 
+
+		// Write into the file
+		new Thread(new WriteToFile(out, queue)).start();
+		try {
+			Thread.sleep(10000);
+			System.out.print(Thread.currentThread().getName());
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
+	}
+
+	@Test
+	public void testFileExistAndNotEmpty() throws Exception {
+
+		// The file has to exist in order to do this test
+		file = new File(fileName);
+		System.out.println("File: " + fileName);
+		assertTrue(file.exists());
+
+		String fileContent = readFile(fileName);
+		assertThat(fileContent, is(notNullValue()));
+
+	}
+
 	public String readFile(String fileName) throws FileNotFoundException {
 		FileReader in = new FileReader(fileName);
 		BufferedReader br = new BufferedReader(in);
 
+		System.out.println("Reading from file...");
 		try {
 			while (br.readLine() != null) {
 				System.out.println(br.readLine());

@@ -28,9 +28,11 @@ public class WriteToFile implements Runnable {
 	@Override
 	public void run() {
 		synchronized (queue) {
+			System.out.println("Into WritingToFile Class");
 			while (true) {
 				if (!queue.isEmpty()) {
 					try {
+						//System.out.println("Writing...");
 						out.write(queue.poll().getBytes("UTF-8"));
 					} catch (IOException e) {
 						// TODO Auto-generated catch block
